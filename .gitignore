@@ -1,0 +1,7 @@
+
+*.xml
+/server/DataAccess/obj
+/server/Api/obj
+/server/DataAccess/bin
+/server/Api/bin
+/server/.idea
