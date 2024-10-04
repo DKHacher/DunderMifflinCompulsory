@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("")]
+[Route("api/[controller]")]
 public class CustomerController(DmContext context) : ControllerBase
 {
     [HttpGet]
@@ -16,8 +16,8 @@ public class CustomerController(DmContext context) : ControllerBase
     }
     
     [HttpPost]
-    [Route("api/create")]
-    public ActionResult createCustomers()
+    [Route("create")]
+    public ActionResult createCustomers([FromBody] Customer customer)
     {
         /*
          *Missing requirements to create customer, starting with basic customer
@@ -25,20 +25,19 @@ public class CustomerController(DmContext context) : ControllerBase
          *and make sure it works correctly
          *next up later is to make it request a frombody to have the values when creating
         */
-        List<Customer> customers = context.Customers.ToList();
-        Customer customer = new Customer();
-        customer.Name = "John Doe";
-        customer.Email = "john.doe@gmail.com";
-        customer.Phone = "555-555-5555";
-        customer.Address = "123 Main Street";
-        customers.Add(customer);
-        context.Customers.AddRange(customers);
+        Customer c = new Customer();
+        c.Name = customer.Name;
+        c.Email = customer.Email;
+        c.Address = customer.Address;
+        c.Phone = customer.Phone;
+        c.Orders = new List<Order>();
+        context.Customers.Add(c);
         context.SaveChanges();
         return Ok();
     }
     
     [HttpDelete]
-    [Route("api/delete/{id:int}")]
+    [Route("delete/{id:int}")]
     public ActionResult deleteCustomer([FromRoute] int id)
     {
         //seems to not work somehow, maybe its the returning of an empty list?
@@ -50,14 +49,29 @@ public class CustomerController(DmContext context) : ControllerBase
     }
     
     [HttpPatch]
-    [Route("api/update/{id:int}")]
-    public ActionResult updateCustomer([FromRoute] int id)
+    [Route("update/{id:int}")]
+    public ActionResult updateCustomer([FromRoute] int id, [FromBody] Customer c)
     {
         /*
          *this is also missing a frombody 
          */
         Customer customer = context.Customers.Find(id);
-        customer.Name = "Jane Doe";
+        if (c.Name != customer.Name && c.Name != null)
+        {
+            customer.Name = c.Name;
+        }
+        if (c.Address != customer.Address && c.Address != null)
+        {
+            customer.Address = c.Address;
+        }
+        if (c.Phone != customer.Phone && c.Phone != null)
+        {
+            customer.Phone = c.Phone;
+        }
+        if (c.Email != customer.Email && c.Email != null)
+        {
+            customer.Email = c.Email;
+        }
         context.Customers.Update(customer);
         context.SaveChanges();
         return Ok();
