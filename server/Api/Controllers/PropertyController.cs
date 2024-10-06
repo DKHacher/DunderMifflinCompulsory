@@ -18,12 +18,6 @@ public class PropertyController(DmContext context) : ControllerBase
     [Route("create")]
     public ActionResult createProperties()
     {
-        /*
-         *Missing requirements to create property, starting with basic property
-         *will go further into depth on the creation of propertys later, for now this is just to test the method
-         *and make sure it works correctly
-         *next up later is to make it request a frombody to have the values when creating
-         */
         List<Property> properties = context.Properties.ToList();
         Property property = new Property();
         property.PropertyName = "Name";
@@ -38,8 +32,6 @@ public class PropertyController(DmContext context) : ControllerBase
     [Route("delete/{id:int}")]
     public ActionResult deleteProperty([FromRoute] int id)
     {
-        //seems to not work somehow, maybe its the returning of an empty list?
-        //apparently it was the only problem, now it works correctly
         Property propertyToDelete = context.Properties.Where(x => x.Id == id).FirstOrDefault();
         context.Properties.Remove(propertyToDelete);
         context.SaveChanges();
@@ -50,9 +42,6 @@ public class PropertyController(DmContext context) : ControllerBase
     [Route("update/{id:int}")]
     public ActionResult updateProperty([FromRoute] int id)
     {
-        /*
-         *this is also missing a frombody
-         */
         Property property = context.Properties.Find(id);
         property.PropertyName = "Name";
         context.Properties.Update(property);

@@ -9,10 +9,19 @@ namespace Api.Controllers;
 public class CustomerController(DmContext context) : ControllerBase
 {
     [HttpGet]
-    [Route("")]
+    [Route("Customers")]
     public ActionResult getCustomers()
     {
         return Ok(context.Customers.ToList());
+    }
+    
+    [HttpGet]
+    [Route("CustomerOrder/{id:int}")]
+    public ActionResult getSpecificCustomersOrders([FromRoute] int id)
+    {
+        Customer customer = context.Customers.Find(id);
+        
+        return Ok(customer.Orders.ToList());
     }
     
     [HttpPost]

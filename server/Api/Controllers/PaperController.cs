@@ -19,12 +19,6 @@ public class PaperController(DmContext context) : ControllerBase
     [Route("create")]
     public ActionResult createPapers()
     {
-        /*
-         *Missing requirements to create paper, starting with basic paper
-         *will go further into depth on the creation of papers later, for now this is just to test the method
-         *and make sure it works correctly
-         *next up later is to make it request a frombody to have the values when creating
-         */
         List<Paper> papers = context.Papers.ToList();
         Paper paper = new Paper();
         paper.Name = "A4";
@@ -43,8 +37,6 @@ public class PaperController(DmContext context) : ControllerBase
     [Route("delete/{id:int}")]
     public ActionResult deletePapers([FromRoute] int id)
     {
-        //seems to not work somehow, maybe its the returning of an empty list?
-        //apparently it was the only problem, now it works correctly
         Paper paperToDelete = context.Papers.Where(x => x.Id == id).FirstOrDefault();
         context.Papers.Remove(paperToDelete);
         context.SaveChanges();
@@ -55,9 +47,6 @@ public class PaperController(DmContext context) : ControllerBase
     [Route("update/{id:int}")]
     public ActionResult updatePapers([FromRoute] int id)
     {
-        /*
-         *this is also missing a frombody
-         */
         Paper paper = context.Papers.Find(id);
         paper.Name = "A3";
         context.Papers.Update(paper);
