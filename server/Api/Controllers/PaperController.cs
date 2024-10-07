@@ -17,40 +17,38 @@ public class PaperController(DmContext context) : ControllerBase
     
     [HttpPost]
     [Route("create")]
-    public ActionResult createPapers()
+    public ActionResult createPapers([FromBody] Paper paper)
     {
-        List<Paper> papers = context.Papers.ToList();
-        Paper paper = new Paper();
-        paper.Name = "A4";
-        paper.Discontinued = false;
-        paper.Stock = 3;
-        paper.Price = 1.99;
-        paper.Properties = new List<Property>();
-        paper.OrderEntries = new List<OrderEntry>();//not sure if this one is needed
-        papers.Add(paper);
-        context.Papers.AddRange(papers);
+        context.Papers.Add(paper);
         context.SaveChanges();
         return Ok();
     }
-    
-    [HttpDelete]
-    [Route("delete/{id:int}")]
-    public ActionResult deletePapers([FromRoute] int id)
-    {
-        Paper paperToDelete = context.Papers.Where(x => x.Id == id).FirstOrDefault();
-        context.Papers.Remove(paperToDelete);
-        context.SaveChanges();
-        return Ok();
-    }
-    
+
     [HttpPatch]
-    [Route("update/{id:int}")]
-    public ActionResult updatePapers([FromRoute] int id)
+    [Route("Discontinue{id:int}")]
+    public ActionResult Discontinue([FromRoute] int id)
     {
         Paper paper = context.Papers.Find(id);
-        paper.Name = "A3";
-        context.Papers.Update(paper);
+        paper.Discontinued = true;
         context.SaveChanges();
-        return Ok();
+        return Ok(paper.Name + " has been discontinued");
+    }
+
+    [HttpPatch]
+    [Route("Restock{id:int}")]
+    public ActionResult Restock([FromRoute] int id, [FromBody] int amount)
+    {
+        Paper paper = context.Papers.Find(id);
+        if (paper.Discontinued == false)
+        {
+            paper.Stock += amount;   
+            return Ok(paper.Name + " has been restocked");
+        }
+        else
+        {
+            return BadRequest("Cant Restock Discontinued Product");
+        }
+        
+        
     }
 }

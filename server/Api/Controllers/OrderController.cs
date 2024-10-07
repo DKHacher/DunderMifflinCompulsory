@@ -17,44 +17,45 @@ public class OrderController(DmContext context) : ControllerBase
     
     [HttpPost]
     [Route("create")]
-    public ActionResult createOrders()
+    public ActionResult createOrders([FromBody] Order order)
     {
+        context.Orders.Add(order);
+        context.SaveChanges();
+        return Ok();
+    }
 
-        List<Order> orders = context.Orders.ToList();
-        Order order = new Order();
-        order.Customer = new Customer();
-        order.Customer.Id = 1;
-        order.OrderDate = DateTime.Now;
-        order.OrderEntries = new List<OrderEntry>();
-        order.Status = "Shipped";
-        order.DeliveryDate = DateOnly.FromDateTime(DateTime.Now.AddDays(2));
-        order.TotalAmount = 3;
-        order.CustomerId = order.Customer.Id;
-        orders.Add(order);
-        context.Orders.AddRange(orders);
-        context.SaveChanges();
-        return Ok();
-    }
-    
-    [HttpDelete]
-    [Route("delete/{id:int}")]
-    public ActionResult deleteOrder([FromRoute] int id)
-    {
-        Order orderToDelete = context.Orders.Where(x => x.Id == id).FirstOrDefault();
-        context.Orders.Remove(orderToDelete);
-        context.SaveChanges();
-        return Ok();
-    }
-    
     [HttpPatch]
-    [Route("update/{id:int}")]
-    public ActionResult updateOrder([FromRoute] int id)
+    [Route("updateStatus/{orderId:int}")]
+    public ActionResult updateOrderStatus([FromRoute] int orderId,[FromBody] int orderstatus)
     {
-        Order order = context.Orders.Find(id);
-        order.Status = "Arrived";
-        context.Orders.Update(order);
+        Order order = context.Orders.Find(orderId);
+        switch (orderstatus)
+        {
+         case 1:
+             order.Status = "AwaitingPayment";
+             break;
+         case 2:
+             order.Status = "Processing";
+             break;
+         case 3:
+             order.Status = "Shipped";
+             break;
+         case 4:
+             order.Status = "Delivered";
+             break;
+         case 5:
+             order.Status = "Completed";
+             break;
+         case 6:
+             if (orderstatus == 1)
+             {
+                 order.Status = "Cancelled";
+             }
+             break;
+        }
         context.SaveChanges();
-        return Ok();
+        return Ok("Order Has Been" + order.Status);
     }
+    
     
 }

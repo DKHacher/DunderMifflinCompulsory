@@ -18,7 +18,12 @@ public class Program
         
         builder.Services.AddControllers();
         
+        builder.Services.AddOpenApiDocument();
+        
         var app = builder.Build();
+        
+        app.UseOpenApi();
+        app.UseSwaggerUi();
 
         using (var serviceScope = app.Services.CreateScope())
         {
@@ -27,6 +32,14 @@ public class Program
         }
         
         app.MapControllers();
+        
+        app.UseCors(config =>
+        {
+            config.AllowAnyHeader();
+            config.AllowAnyMethod();
+            config.AllowAnyOrigin();
+        });
+        
         app.Run();       
     }
 }
