@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
+using Api.DTO;
 using dataaccess;
 using dataaccess.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,11 @@ public class OrderController(DmContext context) : ControllerBase
     
     [HttpPost]
     [Route("create")]
-    public ActionResult createOrders([FromBody] Order order)
+    public ActionResult createOrder([FromBody] Order order)
     {
         context.Orders.Add(order);
+        //int Id = context.Orders.Max(o => o.Id) + 1;
+        context.OrderEntries.AddRange(order.OrderEntries.ToList());
         context.SaveChanges();
         return Ok();
     }
@@ -50,6 +53,10 @@ public class OrderController(DmContext context) : ControllerBase
              if (orderstatus == 1)
              {
                  order.Status = "Cancelled";
+             }
+             else
+             {
+                 return BadRequest("Cannot Cancel Order After Payment");
              }
              break;
         }
