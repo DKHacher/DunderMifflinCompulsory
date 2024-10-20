@@ -1,5 +1,7 @@
 ﻿//Get Commands
-GET http://localhost:5000/api/Customer
+GET http://localhost:5000/api/Customer/Customers
+###
+GET http://localhost:5000/api/Customer/CustomerOrder/14
 ###
 GET http://localhost:5000/api/Property
 ###
@@ -20,8 +22,13 @@ Content-Type: application/json
   "phone": "12345678",
   "email": "e@e2.dk"
 }
+###
+POST http://localhost:5000/api/Property/create
+Content-Type: application/json
 
-
+{
+  "propertyName": "Test"
+}
 
 ###
 PATCH http://localhost:5000/api/Customer/update/14

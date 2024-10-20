@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "daisyui": "^4.12.13",
     "jotai": "^2.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
     "router-dom": "^3.0.1",
     "swagger-typescript-api": "^13.0.22",
     "tailwindcss": "^3.4.13"

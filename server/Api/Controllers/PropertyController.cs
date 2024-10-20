@@ -16,9 +16,11 @@ public class PropertyController(DmContext context) : ControllerBase
     
     [HttpPost]
     [Route("create")]
-    public ActionResult createProperties([FromBody] Property property)
+    public ActionResult createProperties([FromBody] string propertyName)
     {
-        context.Properties.Add(property);
+        Property p = new Property();
+        p.PropertyName = propertyName;
+        context.Properties.Add(p);
         context.SaveChanges();
         return Ok();
     }
